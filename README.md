@@ -8,3 +8,4 @@ ___
 Get started developing with:
 
 * `yarn` to install dependencies
+* `yarn test` to run tests

@@ -1,0 +1,14 @@
+{
+  "flags": {
+    "hasDC": false
+  },
+  "general": {
+    "_MCD_VAT_": "0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B"
+  },
+  "copyright": {
+    "_ORGANIZATION_": "MakerDAO"
+  },
+  "pragma": {
+    "_SOLIDITY_VERSION_": "1.5.12"
+  }
+}

@@ -2,7 +2,7 @@
 Dai Plugin Spell
 </h1>
 
-A dai.js plugin for building spells like the ones [here](https://github.com/makerdao/dss-spellbook/)
+A dai.js plugin for building spells like the ones [here](https://github.com/makerdao/spells)
 ___
 
 Get started developing with:

@@ -1,15 +1,18 @@
 {
-  "name": "dai-plugin-template",
+  "name": "@makerdao/dai-plugin-spell",
   "version": "0.1.0",
-  "description": "A template for building dai.js plugins",
-  "main": "dist/src/index.js",
+  "description": "A dai.js plugin for building spells",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/makerdao/dai-plugin-spell.git"
+  },
+  "main": "dist",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.2.2",
     "@babel/plugin-transform-runtime": "^7.3.4",
     "@babel/preset-env": "^7.4.5",
-    "@makerdao/testchain": "^0.2.12",
     "husky": "^0.14.3",
     "babel-jest": "^24.8.0",
     "eslint": "^5.15.1",
@@ -19,8 +22,7 @@
     "webpack": "^4.39.3"
   },
   "dependencies": {
-    "@makerdao/currency": "^0.9.5",
-    "@makerdao/dai": "^0.18.4",
+    "@makerdao/dai": "^0.27",
     "@makerdao/services-core": "^0.9.9"
   },
   "lint-staged": {
@@ -30,10 +32,8 @@
     ]
   },
   "scripts": {
-    "test": "./scripts/build.sh && ./scripts/run-testchain.sh -s default -u --ci jest --runInBand --config ./test/config/jestDefaultConfig.json",
-    "testchain": "./scripts/run-testchain.sh -s default -u",
+    "test": "./scripts/build.sh && jest --runInBand --config ./test/config/jestDefaultConfig.json",
     "precommit": "lint-staged",
     "build": "./scripts/build.sh"
-  },
-  "license": "MIT"
+  }
 }

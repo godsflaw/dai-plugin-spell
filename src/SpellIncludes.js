@@ -9,25 +9,18 @@ import "lib/dss-interfaces/src/dapp/DSPauseAbstract.sol";
 `;
 
 export default class SpellInclude {
-  constructor() {
-    // TODO(cmooney): get this from the real config (stubbed out)
-    let config = {
-      general: {},
-      include: {}
-    };
-    config.include['_ORGANIZATION_'] = 'MakerDAO';
-
+  constructor(_config) {
     this.replace = {};
 
-    for (let key in config.general) {
-      if (config.general.hasOwnProperty(key)) {
-        this.replace[key] = config.general[key];
+    for (let key in _config.general) {
+      if (_config.general.hasOwnProperty(key)) {
+        this.replace[key] = _config.general[key];
       }
     }
 
-    for (let key in config.include) {
-      if (config.include.hasOwnProperty(key)) {
-        this.replace[key] = config.include[key];
+    for (let key in _config.include) {
+      if (_config.include.hasOwnProperty(key)) {
+        this.replace[key] = _config.include[key];
       }
     }
   }
@@ -37,7 +30,7 @@ export default class SpellInclude {
 
     for (var key in this.replace) {
       if (this.replace.hasOwnProperty(key)) {
-        result = result.replace(key, this.replace[key]);
+        result = result.replace('_' + key + '_', this.replace[key]);
       }
     }
 

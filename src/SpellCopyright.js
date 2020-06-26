@@ -16,25 +16,18 @@ var template = `
 `;
 
 export default class SpellCopyright {
-  constructor() {
-    // TODO(cmooney): get this from the real config (stubbed out)
-    let config = {
-      general: {},
-      copyright: {}
-    };
-    config.copyright['_ORGANIZATION_'] = 'MakerDAO';
-
+  constructor(_config) {
     this.replace = {};
 
-    for (let key in config.general) {
-      if (config.general.hasOwnProperty(key)) {
-        this.replace[key] = config.general[key];
+    for (let key in _config.general) {
+      if (_config.general.hasOwnProperty(key)) {
+        this.replace[key] = _config.general[key];
       }
     }
 
-    for (let key in config.copyright) {
-      if (config.copyright.hasOwnProperty(key)) {
-        this.replace[key] = config.copyright[key];
+    for (let key in _config.copyright) {
+      if (_config.copyright.hasOwnProperty(key)) {
+        this.replace[key] = _config.copyright[key];
       }
     }
   }
@@ -44,7 +37,7 @@ export default class SpellCopyright {
 
     for (var key in this.replace) {
       if (this.replace.hasOwnProperty(key)) {
-        result = result.replace(key, this.replace[key]);
+        result = result.replace('_' + key + '_', this.replace[key]);
       }
     }
 

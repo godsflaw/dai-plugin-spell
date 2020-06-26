@@ -9,43 +9,51 @@ export default class SpellBuilderService extends PublicService {
     super(name, []);
   }
 
-  buildSpell() {
+  buildSpell(_config) {
     let spell = '';
 
-    // TODO(cmooney): parse config here and only call appropriate build
-    // functions.
-    spell = this.buildHeader();
-    spell += 'body\n';
-    spell += this.buildDssSpell();
+    spell = this.buildHeader(_config);
+    spell += this.buildSpellAction(_config);
+    spell += this.buildDssSpell(_config);
 
     return spell;
   }
 
-  buildCopyright() {
-    const spellCopyright = new SpellCopyright();
+  buildCopyright(_config) {
+    const spellCopyright = new SpellCopyright(_config);
     return spellCopyright.build();
   }
 
-  buildSolidityPragma() {
-    const spellSolidityPragma = new SpellSolidityPragma();
+  buildSolidityPragma(_config) {
+    const spellSolidityPragma = new SpellSolidityPragma(_config);
     return spellSolidityPragma.build();
   }
 
-  buildIncludes() {
-    const spellIncludes = new SpellIncludes();
+  buildIncludes(_config) {
+    const spellIncludes = new SpellIncludes(_config);
     return spellIncludes.build();
   }
 
-  buildHeader() {
+  buildHeader(_config) {
     let header = '';
-    header = this.buildCopyright();
-    header += this.buildSolidityPragma();
-    header += this.buildIncludes();
+    header = this.buildCopyright(_config);
+    header += this.buildSolidityPragma(_config);
+    header += this.buildIncludes(_config);
     return header;
   }
 
-  buildDssSpell() {
-    let DssSpell = 'footer\n';
+  buildSpellAction(_config) {
+    let SpellAction = 'SpellAction\n';
+
+    if (_config.flags.hasDC) {
+      // call buildSpellLine()
+    }
+
+    return SpellAction;
+  }
+
+  buildDssSpell(_config) {
+    let DssSpell = 'DssSpell\n';
     return DssSpell;
   }
 }

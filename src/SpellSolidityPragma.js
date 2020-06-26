@@ -3,25 +3,18 @@ pragma solidity _SOLIDITY_VERSION_;
 `;
 
 export default class SpellSolidityPragma {
-  constructor() {
-    // TODO(cmooney): get this from the real config (stubbed out)
-    let config = {
-      general: {},
-      pragma: {}
-    };
-    config.pragma['_SOLIDITY_VERSION_'] = '0.5.12';
-
+  constructor(_config) {
     this.replace = {};
 
-    for (let key in config.general) {
-      if (config.general.hasOwnProperty(key)) {
-        this.replace[key] = config.general[key];
+    for (let key in _config.general) {
+      if (_config.general.hasOwnProperty(key)) {
+        this.replace[key] = _config.general[key];
       }
     }
 
-    for (let key in config.pragma) {
-      if (config.pragma.hasOwnProperty(key)) {
-        this.replace[key] = config.pragma[key];
+    for (let key in _config.pragma) {
+      if (_config.pragma.hasOwnProperty(key)) {
+        this.replace[key] = _config.pragma[key];
       }
     }
   }
@@ -31,7 +24,7 @@ export default class SpellSolidityPragma {
 
     for (var key in this.replace) {
       if (this.replace.hasOwnProperty(key)) {
-        result = result.replace(key, this.replace[key]);
+        result = result.replace('_' + key + '_', this.replace[key]);
       }
     }
 

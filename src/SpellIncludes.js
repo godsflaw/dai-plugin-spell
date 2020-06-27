@@ -1,7 +1,4 @@
-// TODO(cmooney): figure out what we want to do here.
-// 1. include just the abstracts
-// 2. expand the abstracts for easy verification
-var template = `
+const template = `
 import "ds-math/math.sol";
 
 import "lib/dss-interfaces/src/dss/VatAbstract.sol";

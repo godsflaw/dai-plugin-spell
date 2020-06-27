@@ -1,4 +1,4 @@
-var template = `
+const template = `
 pragma solidity _SOLIDITY_VERSION_;
 `;
 

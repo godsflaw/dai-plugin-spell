@@ -3,20 +3,13 @@ import { PublicService } from '@makerdao/services-core';
 import SpellCopyright from './SpellCopyright';
 import SpellSolidityPragma from './SpellSolidityPragma';
 import SpellIncludes from './SpellIncludes';
+import SpellActionContract from './SpellActionContract';
+import SpellActionDSRRate from './SpellActionDSRRate';
+import SpellActionLoop from './SpellActionLoop';
 
 export default class SpellBuilderService extends PublicService {
   constructor(name = 'spellBuilder') {
     super(name, []);
-  }
-
-  buildSpell(_config) {
-    let spell = '';
-
-    spell = this.buildHeader(_config);
-    spell += this.buildSpellAction(_config);
-    spell += this.buildDssSpell(_config);
-
-    return spell;
   }
 
   buildCopyright(_config) {
@@ -35,25 +28,56 @@ export default class SpellBuilderService extends PublicService {
   }
 
   buildHeader(_config) {
-    let header = '';
+    let header;
+
     header = this.buildCopyright(_config);
     header += this.buildSolidityPragma(_config);
     header += this.buildIncludes(_config);
+
     return header;
   }
 
+  buildSpellActionContract(_config) {
+    const spellActionContract = new SpellActionContract(_config);
+    return spellActionContract.build();
+  }
+
+  buildSpellActionDSRRate(_config, spell) {
+    const spellActionDSRRate = new SpellActionDSRRate(_config);
+    return spellActionDSRRate.build(spell);
+  }
+
+  buildSpellActionLoop(_config, spell) {
+    const spellActionLoop = new SpellActionLoop(_config);
+    return spellActionLoop.build(spell);
+  }
+
   buildSpellAction(_config) {
-    let SpellAction = 'SpellAction\n';
+    const spellActionContract = this.buildSpellActionContract(_config);
+    const spellActionDSRRate = this.buildSpellActionDSRRate(
+      _config,
+      spellActionContract
+    );
+    const spellActionLoop = this.buildSpellActionLoop(
+      _config,
+      spellActionDSRRate
+    );
 
-    if (_config.flags.hasDC) {
-      // call buildSpellLine()
-    }
-
-    return SpellAction;
+    return spellActionLoop;
   }
 
   buildDssSpell(_config) {
-    let DssSpell = 'DssSpell\n';
+    const DssSpell = 'DssSpell\n';
     return DssSpell;
+  }
+
+  buildSpell(_config) {
+    let spell;
+
+    spell = this.buildHeader(_config);
+    spell += this.buildSpellAction(_config);
+    spell += this.buildDssSpell(_config);
+
+    return spell;
   }
 }

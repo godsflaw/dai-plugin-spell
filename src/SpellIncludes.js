@@ -1,4 +1,7 @@
 const template = `
+// TODO(cmooney): include the entire abstract here.  Build a template
+// that can load the abstracts directly.
+//
 import "ds-math/math.sol";
 
 import "lib/dss-interfaces/src/dss/VatAbstract.sol";
@@ -23,13 +26,17 @@ export default class SpellInclude {
   }
 
   build() {
+    let before;
     let result = template;
 
-    for (var key in this.replace) {
-      if (this.replace.hasOwnProperty(key)) {
-        result = result.replace('_' + key + '_', this.replace[key]);
+    do {
+      before = result;
+      for (var key in this.replace) {
+        if (this.replace.hasOwnProperty(key)) {
+          result = result.replace('_' + key + '_', this.replace[key]);
+        }
       }
-    }
+    } while (result.localeCompare(before) !== 0);
 
     return result;
   }

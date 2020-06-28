@@ -4,7 +4,9 @@ const template = `
         // ex. an 8% annual rate will be 1000000002440418608258400030
         //
         uint256 DSR_RATE = _DSR_RATE_;
-        PotAbstract(MCD_POT).file("dsr", DSR_RATE);
+        PotAbstract(
+            _MCD_POT_
+        ).file("dsr", DSR_RATE);
 `;
 
 export default class SpellActionDSRRate {
@@ -25,13 +27,17 @@ export default class SpellActionDSRRate {
   }
 
   build(spell) {
+    let before;
     let result = template;
 
-    for (var key in this.replace) {
-      if (this.replace.hasOwnProperty(key)) {
-        result = result.replace('_' + key + '_', this.replace[key]);
+    do {
+      before = result;
+      for (var key in this.replace) {
+        if (this.replace.hasOwnProperty(key)) {
+          result = result.replace('_' + key + '_', this.replace[key]);
+        }
       }
-    }
+    } while (result.localeCompare(before) !== 0);
 
     // check that there was a change
     if (result.localeCompare(template) !== 0) {

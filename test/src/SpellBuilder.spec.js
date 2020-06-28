@@ -96,9 +96,86 @@ test('buildSpellActionDSRRate', async () => {
   );
 
   expect(spellActionDSRRate).toMatch(/uint256 DSR_RATE/);
-  expect(spellActionDSRRate).toMatch(
-    /PotAbstract\(MCD_POT\).file\("dsr", DSR_RATE\)/
+  expect(spellActionDSRRate).toMatch(/file\("dsr", DSR_RATE\)/);
+});
+
+test('buildSpellActionLoop no config', async () => {
+  const maker = await makerInstance();
+  const spellBuilder = maker.service('spellBuilder');
+  const spellActionContract = spellBuilder.buildSpellActionContract(config);
+
+  // remove the config for this template
+  const tmp = config.spell_action_loop;
+  delete config.spell_action_loop;
+
+  const spellActionLoop = spellBuilder.buildSpellActionLoop(
+    config,
+    spellActionContract
   );
+
+  config['spell_action_loop'] = tmp;
+
+  expect(spellActionLoop).not.toMatch(/_SPELL_ACTION_LOOP_/);
+});
+
+test('buildSpellActionLoop', async () => {
+  const maker = await makerInstance();
+  const spellBuilder = maker.service('spellBuilder');
+  const spellActionContract = spellBuilder.buildSpellActionContract(config);
+
+  const spellActionLoop = spellBuilder.buildSpellActionLoop(
+    config,
+    spellActionContract
+  );
+
+  expect(spellActionLoop).toMatch(/IlkRegistryAbstract registry/);
+  expect(spellActionLoop).toMatch(/totalLine \+= ilkLine/);
+  expect(spellActionLoop).toMatch(/_SPELL_ACTION_CIRCUIT_BREAKER_DISABLE_/);
+});
+
+test('buildSpellActionCircuitBreakerDisable no config', async () => {
+  const maker = await makerInstance();
+  const spellBuilder = maker.service('spellBuilder');
+  const spellActionContract = spellBuilder.buildSpellActionContract(config);
+  const spellActionLoop = spellBuilder.buildSpellActionLoop(
+    config,
+    spellActionContract
+  );
+
+  // remove the config for this template
+  const tmp = config.spell_action_circuit_breaker_disable;
+  delete config.spell_action_circuit_breaker_disable;
+
+  const spellActionCircuitBreakerDisable = spellBuilder.buildSpellActionCircuitBreakerDisable(
+    config,
+    spellActionLoop
+  );
+
+  config['spell_action_circuit_breaker_disable'] = tmp;
+
+  expect(spellActionCircuitBreakerDisable).not.toMatch(
+    /_SPELL_ACTION_CIRCUIT_BREAKER_DISABLE_/
+  );
+});
+
+test('buildSpellActionCircuitBreakerDisable', async () => {
+  const maker = await makerInstance();
+  const spellBuilder = maker.service('spellBuilder');
+  const spellActionContract = spellBuilder.buildSpellActionContract(config);
+  const spellActionLoop = spellBuilder.buildSpellActionLoop(
+    config,
+    spellActionContract
+  );
+
+  const spellActionCircuitBreakerDisable = spellBuilder.buildSpellActionCircuitBreakerDisable(
+    config,
+    spellActionLoop
+  );
+
+  expect(spellActionCircuitBreakerDisable).toMatch(
+    /Enable all collateral liquidations/
+  );
+  expect(spellActionCircuitBreakerDisable).toMatch(/rely\(registry\.flip/);
 });
 
 test('buildSpellAction', async () => {
@@ -111,12 +188,79 @@ test('buildSpellAction', async () => {
     config,
     spellActionContract
   );
-  const spellActionResult = spellBuilder.buildSpellActionLoop(
+  const spellActionLoop = spellBuilder.buildSpellActionLoop(
     config,
     spellActionDSRRate
   );
+  const spellActionResult = spellBuilder.buildSpellActionCircuitBreakerDisable(
+    config,
+    spellActionLoop
+  );
 
   expect(spellAction).toBe(spellActionResult);
+});
+
+test('buildDssSpellContract', async () => {
+  const maker = await makerInstance();
+  const spellBuilder = maker.service('spellBuilder');
+
+  const dssSpellContract = spellBuilder.buildDssSpellContract(config);
+  expect(dssSpellContract).toMatch(/contract DssSpell/);
+  expect(dssSpellContract).toMatch(/function description/);
+  expect(dssSpellContract).toMatch(/function schedule/);
+  expect(dssSpellContract).toMatch(/function cast/);
+  expect(dssSpellContract).toMatch(/_DSS_SPELL_CIRCUIT_BREAKER_ENABLE_/);
+});
+
+test('buildDssSpellCircuitBreakerEnable no config', async () => {
+  const maker = await makerInstance();
+  const spellBuilder = maker.service('spellBuilder');
+  const dssSpellContract = spellBuilder.buildDssSpellContract(config);
+
+  // remove the config for this template
+  const tmp = config.dss_spell_circuit_breaker_enable;
+  delete config.dss_spell_circuit_breaker_enable;
+
+  const dssSpellCircuitBreakerEnable = spellBuilder.buildDssSpellCircuitBreakerEnable(
+    config,
+    dssSpellContract
+  );
+
+  config['dss_spell_circuit_breaker_enable'] = tmp;
+
+  expect(dssSpellCircuitBreakerEnable).not.toMatch(
+    /_DSS_SPELL_CIRCUIT_BREAKER_ENABLE_/
+  );
+});
+
+test('buildDssSpellCircuitBreakerEnable', async () => {
+  const maker = await makerInstance();
+  const spellBuilder = maker.service('spellBuilder');
+  const dssSpellContract = spellBuilder.buildDssSpellContract(config);
+
+  const dssSpellCircuitBreakerEnable = spellBuilder.buildDssSpellCircuitBreakerEnable(
+    config,
+    dssSpellContract
+  );
+
+  expect(dssSpellCircuitBreakerEnable).toMatch(
+    /Disable all collateral liquidations/
+  );
+  expect(dssSpellCircuitBreakerEnable).toMatch(/deny\(registry\.flip/);
+});
+
+test('buildDssSpell', async () => {
+  const maker = await makerInstance();
+  const spellBuilder = maker.service('spellBuilder');
+  const dssSpell = spellBuilder.buildDssSpell(config);
+
+  const dssSpellContract = spellBuilder.buildDssSpellContract(config);
+  const buildDssSpellCircuitBreakerEnable = spellBuilder.buildDssSpellCircuitBreakerEnable(
+    config,
+    dssSpellContract
+  );
+
+  expect(dssSpell).toBe(buildDssSpellCircuitBreakerEnable);
 });
 
 test('buildSpell', async () => {

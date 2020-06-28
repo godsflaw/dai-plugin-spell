@@ -6,6 +6,9 @@ import SpellIncludes from './SpellIncludes';
 import SpellActionContract from './SpellActionContract';
 import SpellActionDSRRate from './SpellActionDSRRate';
 import SpellActionLoop from './SpellActionLoop';
+import SpellActionCircuitBreakerDisable from './SpellActionCircuitBreakerDisable';
+import DssSpellContract from './DssSpellContract';
+import DssSpellCircuitBreakerEnable from './DssSpellCircuitBreakerEnable';
 
 export default class SpellBuilderService extends PublicService {
   constructor(name = 'spellBuilder') {
@@ -52,6 +55,13 @@ export default class SpellBuilderService extends PublicService {
     return spellActionLoop.build(spell);
   }
 
+  buildSpellActionCircuitBreakerDisable(_config, spell) {
+    const spellActionCircuitBreakerDisable = new SpellActionCircuitBreakerDisable(
+      _config
+    );
+    return spellActionCircuitBreakerDisable.build(spell);
+  }
+
   buildSpellAction(_config) {
     const spellActionContract = this.buildSpellActionContract(_config);
     const spellActionDSRRate = this.buildSpellActionDSRRate(
@@ -62,13 +72,33 @@ export default class SpellBuilderService extends PublicService {
       _config,
       spellActionDSRRate
     );
+    const spellActionResult = this.buildSpellActionCircuitBreakerDisable(
+      _config,
+      spellActionLoop
+    );
 
-    return spellActionLoop;
+    return spellActionResult;
+  }
+
+  buildDssSpellContract(_config) {
+    const dssSpellContract = new DssSpellContract(_config);
+    return dssSpellContract.build();
+  }
+
+  buildDssSpellCircuitBreakerEnable(_config, spell) {
+    const dssSpellCircuitBreakerEnable = new DssSpellCircuitBreakerEnable(
+      _config
+    );
+    return dssSpellCircuitBreakerEnable.build(spell);
   }
 
   buildDssSpell(_config) {
-    const DssSpell = 'DssSpell\n';
-    return DssSpell;
+    const dssSpellContract = this.buildDssSpellContract(_config);
+    const buildDssSpellCircuitBreakerEnable = this.buildDssSpellCircuitBreakerEnable(
+      _config,
+      dssSpellContract
+    );
+    return buildDssSpellCircuitBreakerEnable;
   }
 
   buildSpell(_config) {

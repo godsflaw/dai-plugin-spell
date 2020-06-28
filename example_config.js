@@ -1,7 +1,4 @@
 module.exports = {
-  flags: {
-    hasDC: false
-  },
   general: {
     DEPLOYER: '0xdDb108893104dE4E1C6d0E47c42237dB4E617ACc',
     MULTICALL: '0x5e227AD1969Ea493B43F840cfF78d08a6fc17796',
@@ -82,5 +79,14 @@ module.exports = {
   },
   spell_action_loop: {
     ILK_REGISTRY: '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef'
+  },
+  dss_spell_contract: {
+    // active, but no substitutions
+  },
+  dss_spell_circuit_breaker_enable: {
+    ILK_REGISTRY: '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef'
+  },
+  spell_action_circuit_breaker_disable: {
+    // active, but no substitutions
   }
 };

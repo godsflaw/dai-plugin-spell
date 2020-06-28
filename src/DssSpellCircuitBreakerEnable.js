@@ -1,22 +1,18 @@
 const template = `
+        // Disable all collateral liquidations
+        //
+        // This change will prevent liquidations across all collateral types
+        // and is colloquially referred to as the circuit breaker.
+        //
         IlkRegistryAbstract registry = IlkRegistryAbstract(
             _ILK_REGISTRY_
         );
         bytes32[] memory ilks = registry.list();
 
         for (uint i = 0; i < ilks.length; i++) {
-            // Always drip the ilk prior to modifications (housekeeping)
-            JugAbstract(
-                _MCD_JUG_
-            ).drip(ilks[i]);
-
-            _SPELL_ACTION_CIRCUIT_BREAKER_DISABLE_
-
-            // Keep a running total of all ilk Debt Ceilings
-            (,,, uint256 ilkLine,) = VatAbstract(
-                _MCD_VAT_
-            ).ilks(ilks[i]);
-            totalLine += ilkLine;
+            FlipperMomAbstract(
+                _FLIPPER_MOM_
+            ).deny(registry.flip(ilks[i]));
         }
 `;
 
@@ -50,8 +46,12 @@ export default class SpellActionLoop {
       }
     } while (result.localeCompare(before) !== 0);
 
-    // we always want the loop to at least do housecleaning
-    result = spell.replace('_SPELL_ACTION_LOOP_', result);
+    // check that there was a change
+    if (result.localeCompare(template) !== 0) {
+      result = spell.replace('_DSS_SPELL_CIRCUIT_BREAKER_ENABLE_', result);
+    } else {
+      result = spell.replace('_DSS_SPELL_CIRCUIT_BREAKER_ENABLE_', '');
+    }
 
     return result;
   }

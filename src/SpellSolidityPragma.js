@@ -20,13 +20,17 @@ export default class SpellSolidityPragma {
   }
 
   build() {
+    let before;
     let result = template;
 
-    for (var key in this.replace) {
-      if (this.replace.hasOwnProperty(key)) {
-        result = result.replace('_' + key + '_', this.replace[key]);
+    do {
+      before = result;
+      for (var key in this.replace) {
+        if (this.replace.hasOwnProperty(key)) {
+          result = result.replace('_' + key + '_', this.replace[key]);
+        }
       }
-    }
+    } while (result.localeCompare(before) !== 0);
 
     return result;
   }
